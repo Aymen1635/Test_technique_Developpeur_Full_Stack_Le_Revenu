@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = ({ env }) => {
-  const client = env('DATABASE_CLIENT', 'sqlite');
+  const client = env('DATABASE_CLIENT', 'postgres');
 
   // Ensure database path is always anchored to apps/api root, whether running from src or dist
   const isDist = __dirname.includes('dist');

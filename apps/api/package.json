@@ -4,13 +4,13 @@
   "private": true,
   "description": "Strapi v5 API for Le Revenu Community",
   "scripts": {
-    "dev": "node --import ./scripts/copy-jsons.mjs ../../node_modules/@strapi/strapi/bin/strapi.js develop",
-    "develop": "node --import ./scripts/copy-jsons.mjs ../../node_modules/@strapi/strapi/bin/strapi.js develop",
+    "dev": "node --import ./scripts/copy-jsons.mjs --import ./scripts/database-bootstrap.mjs ../../node_modules/@strapi/strapi/bin/strapi.js develop",
+    "develop": "node --import ./scripts/copy-jsons.mjs --import ./scripts/database-bootstrap.mjs ../../node_modules/@strapi/strapi/bin/strapi.js develop",
     "prestart": "node scripts/copy-jsons.mjs",
-    "start": "strapi start",
+    "start": "node --import ./scripts/database-bootstrap.mjs ../../node_modules/@strapi/strapi/bin/strapi.js start",
     "build": "strapi build",
     "postbuild": "node scripts/copy-jsons.mjs",
-    "strapi": "strapi",
+    "strapi": "node --import ./scripts/database-bootstrap.mjs ../../node_modules/@strapi/strapi/bin/strapi.js",
     "seed": "tsx scripts/seed.ts",
     "test": "vitest run"
   },

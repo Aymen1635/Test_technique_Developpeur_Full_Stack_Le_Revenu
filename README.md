@@ -148,8 +148,9 @@ Conformément aux attentes du test technique, l'architecture a été conçue pou
   - Côté client, l'état de vote est scopé par utilisateur (`lr_poll_${username}_${discussionId}`), ce qui permet à différents membres de voter sur un même sondage sans bloquer les autres comptes.
 
 ### C. Base de données & Persistance
-- **PostgreSQL 16** : Configuration prête et documentée dans `apps/api/config/database.js` et `docker-compose.yml` conformément aux exigences du sujet.
-- **Fallback SQLite automatisé** : En développement local, Strapi bascule automatiquement sur SQLite si aucun serveur PostgreSQL n'est spécifié, permettant une évaluation immédiate du projet sans dépendance externe.
+- **PostgreSQL 16 prioritaire** : Les scripts de démarrage vérifient la connexion à PostgreSQL avant de lancer Strapi.
+- **Fallback SQLite automatisé** : Si PostgreSQL est indisponible (par exemple, serveur arrêté ou inaccessible), Strapi démarre avec SQLite. Une erreur d'identifiants ou de configuration PostgreSQL reste explicite et ne déclenche pas de bascule silencieuse.
+- **Sélection explicite** : `DATABASE_CLIENT=postgres` privilégie PostgreSQL avec fallback en cas d'indisponibilité ; `DATABASE_CLIENT=sqlite` force SQLite. Les deux bases ont des données distinctes : les données SQLite ne sont pas automatiquement transférées vers PostgreSQL, et inversement.
 
 ---
 
