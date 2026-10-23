@@ -14,6 +14,8 @@ interface ProfilePageProps {
   }>;
 }
 
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata({ params }: ProfilePageProps) {
   const { username } = await params;
   return {

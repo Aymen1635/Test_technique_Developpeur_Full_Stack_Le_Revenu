@@ -2,13 +2,11 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User } from '@/types';
-import { login, getMe } from '@/lib/api';
+import { getApiUrl, login, getMe } from '@/lib/api';
 import { DEMO_USERS, DemoUserOption } from '@/lib/demo-users';
 
 export { DEMO_USERS };
 export type { DemoUserOption };
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:1337';
 
 interface AuthContextType {
   user: User | null;
@@ -47,7 +45,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Sync all Strapi users dynamically into demo switcher
   useEffect(() => {
-    fetch(`${API_URL}/api/users`)
+    fetch(`${getApiUrl()}/api/users`)
       .then((r) => (r.ok ? r.json() : []))
       .then((usersList) => {
         if (Array.isArray(usersList) && usersList.length > 0) {

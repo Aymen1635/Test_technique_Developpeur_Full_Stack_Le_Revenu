@@ -25,7 +25,7 @@ export function MobileNav() {
 
         <Link
           href="/spaces"
-          className={`flex flex-col items-center gap-0.5 text-[11px] p-1 ${pathname.startsWith('/spaces') ? 'text-brand font-semibold' : 'text-ink-3'}`}
+          className={`flex flex-col items-center gap-0.5 text-[11px] p-1 ${pathname?.startsWith('/spaces') ? 'text-brand font-semibold' : 'text-ink-3'}`}
         >
           <Icon name="grid" />
           Espaces
@@ -56,7 +56,7 @@ export function MobileNav() {
         {mode === 'member' && user ? (
           <Link
             href={`/profile/${user.username}`}
-            className={`flex flex-col items-center gap-0.5 text-[11px] p-1 ${pathname.startsWith('/profile') ? 'text-brand font-semibold' : 'text-ink-3'}`}
+            className={`flex flex-col items-center gap-0.5 text-[11px] p-1 ${pathname?.startsWith('/profile') ? 'text-brand font-semibold' : 'text-ink-3'}`}
           >
             <Icon name="user" />
             Profil

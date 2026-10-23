@@ -4,7 +4,7 @@ RUN apk add --no-cache libc6-compat vips-dev python3 make g++ gcc
 WORKDIR /opt/app
 
 COPY package.json ./
-RUN npm install --omit=dev
+RUN npm install
 
 COPY . .
 RUN npm run build

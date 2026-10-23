@@ -1,4 +1,5 @@
 import type { Core } from '@strapi/strapi';
+import { autoSeed } from './auto-seed';
 
 export default {
   register(/* { strapi }: { strapi: Core.Strapi } */) {},
@@ -62,6 +63,17 @@ export default {
 
       if (authenticatedRole) {
         await grantPermissions(authenticatedRole, authenticatedActions);
+      }
+
+      // Auto-seed initial content if the database is fresh (e.g. on new Docker or Postgres instance)
+      try {
+        const categoryCount = await strapi.documents('api::category.category').count();
+        if (categoryCount === 0) {
+          strapi.log.info('🌱 Empty database detected! Running auto-seed for categories, users and discussions...');
+          await autoSeed(strapi);
+        }
+      } catch (seedErr) {
+        strapi.log.warn('Auto-seed check skipped:', seedErr);
       }
     } catch (err) {
       strapi.log.warn('Could not auto-configure users-permissions roles:', err);

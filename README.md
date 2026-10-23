@@ -94,6 +94,12 @@ Si vous préférez exécuter la stack complète avec PostgreSQL 16 dans Docker c
 - API Strapi v5 : `http://localhost:1337`
 - PostgreSQL 16 : `localhost:5432`
 
+> **Auto-Seed automatique** : Dès le premier démarrage, Strapi détecte que la base PostgreSQL est vierge et injecte automatiquement l'ensemble des 11 catégories, 20 utilisateurs et 25 discussions de démonstration.  
+> Si vous souhaitez réinitialiser les données au sein de Docker :
+> ```bash
+> docker compose exec api npm run seed
+> ```
+
 ---
 
 ## 4. Données de Démonstration (Seed)

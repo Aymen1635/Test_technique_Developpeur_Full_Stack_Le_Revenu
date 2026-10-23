@@ -1,6 +1,13 @@
 import { Category, Discussion, Reply, DiscussionsResponse, CreateDiscussionInput, CreateReplyInput, User } from '@/types';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:1337';
+export function getApiUrl(): string {
+  // On the server side (SSR inside Docker / Node), prefer INTERNAL_API_URL (e.g. http://api:1337)
+  if (typeof window === 'undefined') {
+    return process.env.INTERNAL_API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:1337';
+  }
+  // On the client side (browser), always reach Strapi via the public host URL
+  return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:1337';
+}
 
 /**
  * Standard headers for Strapi REST requests
@@ -85,7 +92,7 @@ export async function getDiscussions(params: {
   }
 
   try {
-    const res = await fetch(`${API_URL}/api/discussions?${query.toString()}`, {
+    const res = await fetch(`${getApiUrl()}/api/discussions?${query.toString()}`, {
       headers: getHeaders(),
       cache: 'no-store',
     });
@@ -117,7 +124,7 @@ export async function getDiscussionBySlug(slug: string): Promise<Discussion | nu
   appendDiscussionPopulate(query);
 
   try {
-    const res = await fetch(`${API_URL}/api/discussions?${query.toString()}`, {
+    const res = await fetch(`${getApiUrl()}/api/discussions?${query.toString()}`, {
       headers: getHeaders(),
       cache: 'no-store',
     });
@@ -139,7 +146,7 @@ export async function getDiscussionBySlug(slug: string): Promise<Discussion | nu
  */
 export async function getCategories(): Promise<Category[]> {
   try {
-    const res = await fetch(`${API_URL}/api/categories?sort=name:asc`, {
+    const res = await fetch(`${getApiUrl()}/api/categories?sort=name:asc`, {
       headers: getHeaders(),
       cache: 'no-store',
     });
@@ -159,7 +166,7 @@ export async function getCategories(): Promise<Category[]> {
  */
 export async function getCategoryBySlug(slug: string): Promise<Category | null> {
   try {
-    const res = await fetch(`${API_URL}/api/categories?filters[slug][$eq]=${encodeURIComponent(slug)}`, {
+    const res = await fetch(`${getApiUrl()}/api/categories?filters[slug][$eq]=${encodeURIComponent(slug)}`, {
       headers: getHeaders(),
       cache: 'no-store',
     });
@@ -178,7 +185,7 @@ export async function getCategoryBySlug(slug: string): Promise<Category | null> 
  * Create a new discussion (Authenticated)
  */
 export async function createDiscussion(input: CreateDiscussionInput, token: string): Promise<Discussion> {
-  const res = await fetch(`${API_URL}/api/discussions`, {
+  const res = await fetch(`${getApiUrl()}/api/discussions`, {
     method: 'POST',
     headers: getHeaders(token),
     body: JSON.stringify({ data: input }),
@@ -198,7 +205,7 @@ export async function createDiscussion(input: CreateDiscussionInput, token: stri
  * Create a reply for a discussion (Authenticated)
  */
 export async function createReply(input: CreateReplyInput, token: string): Promise<Reply> {
-  const res = await fetch(`${API_URL}/api/replies`, {
+  const res = await fetch(`${getApiUrl()}/api/replies`, {
     method: 'POST',
     headers: getHeaders(token),
     body: JSON.stringify({ data: input }),
@@ -222,7 +229,7 @@ export async function setDiscussionSolution(
   replyId: string | number,
   token: string
 ): Promise<Discussion> {
-  const res = await fetch(`${API_URL}/api/discussions/${discussionId}/solution`, {
+  const res = await fetch(`${getApiUrl()}/api/discussions/${discussionId}/solution`, {
     method: 'PUT',
     headers: getHeaders(token),
     body: JSON.stringify({ replyId }),
@@ -245,7 +252,7 @@ export async function likeDiscussion(
   token: string,
   action: 'like' | 'unlike' = 'like'
 ): Promise<Discussion> {
-  const res = await fetch(`${API_URL}/api/discussions/${discussionId}/like`, {
+  const res = await fetch(`${getApiUrl()}/api/discussions/${discussionId}/like`, {
     method: 'POST',
     headers: getHeaders(token),
     body: JSON.stringify({ data: { action } }),
@@ -268,7 +275,7 @@ export async function votePoll(
   optionIndex: number,
   token: string
 ): Promise<Discussion> {
-  const res = await fetch(`${API_URL}/api/discussions/${discussionId}/poll-vote`, {
+  const res = await fetch(`${getApiUrl()}/api/discussions/${discussionId}/poll-vote`, {
     method: 'POST',
     headers: getHeaders(token),
     body: JSON.stringify({ data: { optionIndex } }),
@@ -288,7 +295,7 @@ export async function votePoll(
 export async function getUserByUsername(username: string): Promise<User | null> {
   try {
     const res = await fetch(
-      `${API_URL}/api/users?filters[username][$eq]=${encodeURIComponent(username)}`,
+      `${getApiUrl()}/api/users?filters[username][$eq]=${encodeURIComponent(username)}`,
       { cache: 'no-store' }
     );
     if (!res.ok) return null;
@@ -304,7 +311,7 @@ export async function getUserByUsername(username: string): Promise<User | null> 
  * Authenticate with Strapi
  */
 export async function login(identifier: string, password: string): Promise<{ jwt: string; user: User }> {
-  const res = await fetch(`${API_URL}/api/auth/local`, {
+  const res = await fetch(`${getApiUrl()}/api/auth/local`, {
     method: 'POST',
     headers: getHeaders(),
     body: JSON.stringify({ identifier, password }),
@@ -324,7 +331,7 @@ export async function login(identifier: string, password: string): Promise<{ jwt
  */
 export async function getMe(token: string): Promise<User | null> {
   try {
-    const res = await fetch(`${API_URL}/api/users/me`, {
+    const res = await fetch(`${getApiUrl()}/api/users/me`, {
       headers: getHeaders(token),
       cache: 'no-store',
     });
