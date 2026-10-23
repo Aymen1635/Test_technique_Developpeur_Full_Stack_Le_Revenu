@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: community_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: community_lerevenu
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d community_lerevenu']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - community_net
+
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    container_name: community_strapi
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: community_lerevenu
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: postgrespassword
+      DATABASE_SSL: false
+      HOST: 0.0.0.0
+      PORT: 1337
+      APP_KEYS: "APP_KEY_DOCKER_A,APP_KEY_DOCKER_B,APP_KEY_DOCKER_C,APP_KEY_DOCKER_D"
+      API_TOKEN_SALT: "API_TOKEN_SALT_DOCKER_12345678"
+      ADMIN_JWT_SECRET: "ADMIN_JWT_SECRET_DOCKER_12345678"
+      TRANSFER_TOKEN_SALT: "TRANSFER_TOKEN_SALT_DOCKER_12345678"
+      JWT_SECRET: "JWT_SECRET_DOCKER_12345678"
+    ports:
+      - '1337:1337'
+    volumes:
+      - ./apps/api/.tmp:/opt/app/.tmp
+    networks:
+      - community_net
+
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    container_name: community_web
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: http://localhost:1337
+    ports:
+      - '3000:3000'
+    networks:
+      - community_net
+
+volumes:
+  postgres_data:
+
+networks:
+  community_net:
+    driver: bridge
