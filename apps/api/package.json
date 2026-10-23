@@ -4,9 +4,9 @@
   "private": true,
   "description": "Strapi v5 API for Le Revenu Community",
   "scripts": {
-    "predev": "node scripts/copy-jsons.mjs",
-    "dev": "strapi develop",
-    "develop": "strapi develop",
+    "dev": "node --import ./scripts/copy-jsons.mjs ../../node_modules/@strapi/strapi/bin/strapi.js develop",
+    "develop": "node --import ./scripts/copy-jsons.mjs ../../node_modules/@strapi/strapi/bin/strapi.js develop",
+    "prestart": "node scripts/copy-jsons.mjs",
     "start": "strapi start",
     "build": "strapi build",
     "postbuild": "node scripts/copy-jsons.mjs",

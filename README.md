@@ -36,22 +36,6 @@ Copy-Item apps/api/.env.example apps/api/.env
 Copy-Item apps/web/.env.example apps/web/.env.local
 ```
 
-### Étape 2 : Comprendre les variables configurées
-
-Les valeurs par défaut fournies dans les fichiers d'exemple fonctionnent immédiatement sans modification. Voici le détail des variables :
-
-#### Backend (`apps/api/.env`)
-- `HOST` & `PORT` : Hôte et port d'écoute du serveur Strapi (par défaut `0.0.0.0` et `1337`).
-- `APP_KEYS`, `API_TOKEN_SALT`, `ADMIN_JWT_SECRET`, `JWT_SECRET` : Clés cryptographiques de session et de signature des tokens JWT d'authentification.
-- `DATABASE_CLIENT` : Moteur de base de données utilisé par Strapi :
-  - `sqlite` *(par défaut en local)* : Sauvegarde les données dans le fichier `apps/api/.tmp/data.db`, ce qui permet de tester immédiatement sans installer ni démarrer de serveur de base de données.
-  - `postgres` *(requis en production ou avec Docker)* : Connecte Strapi à une base de données PostgreSQL.
-- `DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_NAME`, `DATABASE_USERNAME`, `DATABASE_PASSWORD` : Identifiants de connexion PostgreSQL (utilisés uniquement si `DATABASE_CLIENT=postgres`).
-
-#### Frontend (`apps/web/.env.local`)
-- `NEXT_PUBLIC_API_URL` : URL de base de l'API Strapi appelée par le frontend Next.js (par défaut `http://localhost:1337`).
-
----
 
 ## 3. Installation et Démarrage
 
