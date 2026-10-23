@@ -10,3 +10,5 @@ dist/
 .env.local
 .DS_Store
 Thumbs.db
+apps/api/.env
+apps/web/.env.locals
