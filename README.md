@@ -53,6 +53,8 @@ Copy-Item apps/web/.env.example apps/web/.env.local
    > Strapi démarre sur **http://localhost:1337**.  
    > Au premier démarrage, les schémas JSON et les autorisations d'accès aux API publiques et authentifiées sont configurés automatiquement.
 
+  **En cas d'erreur de connexion à la base de données** (par exemple `password authentication failed for user "postgres"`), vérifiez les variables `DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_NAME`, `DATABASE_USERNAME` et `DATABASE_PASSWORD` dans `apps/api/.env`. Elles doivent correspondre à votre serveur PostgreSQL local. Les valeurs par défaut de `apps/api/.env.example` utilisent le mot de passe `postgres`, tandis que le PostgreSQL lancé par Docker Compose utilise `postgrespassword`. Si vous utilisez ce dernier avec un backend démarré localement, mettez `DATABASE_PASSWORD=postgrespassword` dans `apps/api/.env`. Vous pouvez aussi définir `DATABASE_CLIENT=sqlite` pour démarrer avec SQLite sans PostgreSQL.
+
 3. **Démarrer le frontend Next.js 15** (dans un second terminal) :
    ```bash
    npm run dev:web
